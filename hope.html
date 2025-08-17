@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Trái tim sinh nhật – Mobile WOW</title>
+<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Inter:wght@400;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg1:#0f172a; --bg2:#1e3a8a; --bg3:#6d28d9;
+  --size:120px; --text-contrast:#ffdfe9;
+  --pink:#ff93bf; --rose:#ff6aa3; --ysoft1:#fffbe6; --ysoft2:#fff6d1;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+body{
+  background: radial-gradient(circle at 20% -10%, var(--bg2), var(--bg1));
+  animation: gradientShift 28s ease-in-out infinite;
+  display:flex;align-items:center;justify-content:center;flex-direction:column;color:#fff;
+  overflow:hidden;position:relative;
+}
+@keyframes gradientShift{
+  0%{background: radial-gradient(circle at 20% -10%, var(--bg2), var(--bg1))}
+  50%{background: radial-gradient(circle at 80% 120%, var(--bg3), var(--bg1))}
+  100%{background: radial-gradient(circle at 20% -10%, var(--bg2), var(--bg1))}
+}
+
+/* Stars + shooting star */
+.star{position:absolute;width:2px;height:2px;background:#fff;opacity:.85;animation:twinkle 2.2s infinite}
+@keyframes twinkle{0%,100%{opacity:.85}50%{opacity:.24}}
+.shooting{position:fixed;left:-10vw;top:10vh;width:2px;height:2px;background:#fff;border-radius:50%;
+  box-shadow:0 0 8px #fff, 0 0 16px #fff;transform:translate3d(0,0,0);animation:shoot 1.6s linear forwards}
+.shooting::after{content:'';position:absolute;right:2px;top:0;width:120px;height:2px;background:linear-gradient(90deg,#ffffff,rgba(255,255,255,0));opacity:.8}
+@keyframes shoot{to{transform:translate3d(110vw,40vh,0);opacity:0}}
+
+/* Stage */
+.stage{width:100%;max-width:920px;height:420px;display:flex;align-items:center;justify-content:center;position:relative;overflow:visible;flex-direction:column;gap:10px}
+.heart{width:var(--size);height:var(--size);cursor:pointer;filter:drop-shadow(0 0 15px rgba(255,105,180,.6));transform-origin:center center;animation:beat 1s ease-in-out infinite, glow 1.6s ease-in-out infinite}
+@keyframes beat{0%,100%{transform:scale(1)}30%{transform:scale(1.12)}45%{transform:scale(.96)}60%{transform:scale(1.06)}}
+@keyframes glow{0%,100%{filter:drop-shadow(0 0 15px rgba(255,182,193,.5))}50%{filter:drop-shadow(0 0 30px rgba(255,20,147,.85))}}
+
+/* Moving marquee */
+.moving-text{position:absolute;top:6%;white-space:nowrap;font-size:26px;font-weight:800;color:var(--text-contrast);animation:moveText 8s linear infinite;opacity:0;transition:opacity .4s;text-shadow:0 2px 8px rgba(0,0,0,.4)}
+@keyframes moveText{0%{transform:translateX(100%)}100%{transform:translateX(-100%)}}
+
+/* Floating Love You */
+.love-float{position:absolute;font-size:20px;font-weight:700;color:#ffb6d9;animation:rise 8s linear forwards;opacity:.9;text-shadow:0 2px 6px rgba(0,0,0,.35)}
+@keyframes rise{from{transform:translateY(100vh) rotate(-12deg);opacity:1}to{transform:translateY(-150px) rotate(12deg);opacity:0}}
+
+/* Heart rain */
+.heart-rain{position:fixed;pointer-events:none;z-index:50;user-select:none;font-size:14px;color:#ff7bb3;opacity:.9;text-shadow:0 2px 6px rgba(0,0,0,.4);animation:fall linear forwards}
+@keyframes fall{to{transform:translateY(110vh) rotate(30deg);opacity:0}}
+
+/* Cake */
+.cake{position:relative;margin-top:6px;display:flex;flex-direction:column;align-items:center;cursor:pointer}
+.cake-wrap{width:min(62vw,320px);filter:drop-shadow(0 10px 28px rgba(0,0,0,.28))}
+.wish-badge{position:absolute;top:-36px;left:50%;transform:translateX(-50%) translateY(-10px);background:rgba(255,255,255,.96);color:#c2185b;padding:6px 12px;border-radius:999px;font-weight:800;font-size:14px;box-shadow:0 10px 22px rgba(0,0,0,.18);opacity:0;transition:all 420ms ease;pointer-events:none;font-family:'Dancing Script',cursive}
+.wish-badge.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Helper & notes button */
+.love-text{margin-top:10px;font-size:22px;color:#ffb6d9;animation:loveFade 2s ease-in-out infinite alternate;text-shadow:0 2px 6px rgba(0,0,0,.25)}
+.footer-message{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);font-size:14px;color:#2b2730;background:linear-gradient(180deg,#ffe1f0,#ffd7ea);padding:8px 14px;border-radius:999px;box-shadow:0 8px 20px rgba(0,0,0,.18);cursor:pointer;font-weight:800}
+.footer-message:hover{filter:brightness(1.05)}
+#notesBtn{border:1px solid rgba(255,255,255,.35)}
+
+/* Popup (handwritten) */
+.popup{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.98);background:linear-gradient(180deg,#fffafc,#fff5f8);color:#2b2730;padding:22px 20px;border-radius:14px;box-shadow:0 18px 50px rgba(9,10,18,.6);max-width:360px;text-align:left;display:none;z-index:1000;font-family:'Dancing Script',cursive;font-size:20px;line-height:1.45;border:1px solid rgba(200,100,150,.08)}
+.popup.show{display:block;animation:popupIn 360ms cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes popupIn{from{opacity:0;transform:translate(-50%,-54%) scale(.96)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.popup .close-btn{margin-top:12px;display:block;margin-left:auto;background:var(--rose);color:#fff;border:none;padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:800;box-shadow:0 6px 14px rgba(255,106,163,.18)}
+.popup p{color:#442435;text-shadow:none;margin:0;position:relative}
+.popup p::after{content:'▍';margin-left:6px;animation:blink 1s steps(1) infinite;opacity:.8}
+@keyframes blink{50%{opacity:0}}
+
+/* Notes modal */
+.notes-overlay{position:fixed;inset:0;background:rgba(10,10,20,.45);backdrop-filter:blur(2px);display:none;align-items:center;justify-content:center;z-index:1200}
+.notes-overlay.show{display:flex}
+.notes-card{width:min(92vw,420px);max-height:78vh;overflow:auto;background:linear-gradient(180deg,#fff8fb,#fff6ff);border-radius:18px;box-shadow:0 18px 50px rgba(0,0,0,.35);padding:16px 14px;border:1px solid rgba(200,100,180,.12);position:relative}
+.notes-title{font-family:'Dancing Script',cursive;font-size:24px;color:#b4165a;margin:0 0 10px 6px}
+.notes-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.note-item{background:linear-gradient(180deg,var(--ysoft1),var(--ysoft2));border-radius:12px;box-shadow:0 8px 18px rgba(0,0,0,.12);color:#2b2730;font-family:'Dancing Script',cursive;font-size:16px;padding:10px 12px}
+.notes-close{position:absolute;right:10px;top:10px;background:#ff6aa3;color:#fff;border:none;border-radius:10px;padding:6px 10px;font-weight:800;cursor:pointer}
+
+/* Big heart burst for notes */
+.burst-heart{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%) scale(0);width:160px;height:140px;z-index:1300;border-radius:60% 60% 60% 60%/70% 70% 50% 50%;
+  background: radial-gradient(circle at 30% 30%, #ffd1e6, #ffb1d5 60%, #ff95c7 90%);
+  box-shadow:0 0 30px rgba(255,150,200,.65), 0 0 60px rgba(255,120,180,.45);
+  opacity:.95; pointer-events:none}
+.burst-show{animation:burst 700ms cubic-bezier(.2,.9,.2,1) forwards}
+@keyframes burst{
+  0%{transform:translate(-50%,-50%) scale(0);opacity:.95}
+  60%{transform:translate(-50%,-50%) scale(1.25)}
+  100%{transform:translate(-50%,-50%) scale(0);opacity:0}
+}
+
+/* Firework + confetti + smoke */
+.firework{position:fixed;width:6px;height:6px;background:white;border-radius:50%;animation:explode 900ms ease-out forwards;pointer-events:none;z-index:1400;mix-blend-mode:screen}
+@keyframes explode{from{transform:scale(1);opacity:1}to{transform:scale(.2) translate(var(--dx),var(--dy));opacity:0}}
+.confetti{position:fixed;width:8px;height:12px;background:#fff;opacity:.95;transform:translateY(-60px) rotate(0deg);animation:confFall linear forwards;z-index:1400;border-radius:2px}
+@keyframes confFall{to{transform:translateY(110vh) rotate(540deg);opacity:0}}
+.smoke{position:fixed;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle,#d6d6d6,#bdbdbd 60%,rgba(189,189,189,0) 70%);opacity:.7;filter:blur(.4px);animation:smokeUp 1.6s ease-out forwards;pointer-events:none;z-index:1100}
+@keyframes smokeUp{to{transform:translateY(-80px) translateX(var(--sx));opacity:0}}
+
+/* Sticky notes (tiny single floating ones when cake explodes into 💌) */
+.note{position:fixed;padding:6px 10px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,.12);color:#2b2730;font-family:'Dancing+Script',cursive;font-size:13px;z-index:1000;background:linear-gradient(180deg,var(--ysoft1),var(--ysoft2));opacity:.95}
+
+/* Mobile tweaks */
+@media (max-width:480px){
+  :root{--size:98px}
+  .moving-text{font-size:18px;top:4%}
+  .love-text{font-size:18px}
+  .popup{font-size:18px;max-width:320px}
+}
+</style>
+</head>
+<body>
+
+<!-- Marquee -->
+<div class="moving-text" id="movingText"></div>
+
+<!-- Stage -->
+<div class="stage" id="stage">
+  <!-- Heart -->
+  <svg class="heart" id="heart" viewBox="0 0 32 29.6" aria-label="heart">
+    <defs>
+      <linearGradient id="g" x1="0" x2="1">
+        <stop offset="0" stop-color="#ffb6d9">
+          <animate attributeName="stop-color" values="#ffb6d9;#ff69b4;#ff2d95;#ffb6d9" dur="4s" repeatCount="indefinite" />
+        </stop>
+        <stop offset="1" stop-color="#ff69b4">
+          <animate attributeName="stop-color" values="#ff69b4;#ff2d95;#ff0000;#ff69b4" dur="4s" repeatCount="indefinite" />
+        </stop>
+      </linearGradient>
+    </defs>
+    <path fill="url(#g)" d="M23.6 0c-2.9 0-4.9 1.9-6 3.7C16.3 1.9 14.3 0 11.4 0 6.1 0 2 4.2 2 9.4c0 7.2 11.2 12.9 14 20.2 2.8-7.3 14-13 14-20.2C30 4.2 25.9 0 20.6 0z"/>
+  </svg>
+
+  <!-- Cake -->
+  <div class="cake" id="cake" title="Toca para una sorpresa ✨">
+    <div class="wish-badge" id="wishBadge">Wish granted!</div>
+    <svg class="cake-wrap" viewBox="0 0 320 220" aria-label="birthday cake">
+      <ellipse cx="160" cy="205" rx="110" ry="12" fill="rgba(0,0,0,.25)"/>
+      <g filter="url(#soft)">
+        <rect x="55" y="130" width="210" height="60" rx="16" fill="#f6c3d6"/>
+        <path d="M55 145 h210 v18 q-10 10 -20 0 t-20 0 t-20 0 t-20 0 t-20 0 t-20 0 t-20 0 t-20 0 t-20 0 v-18z" fill="#ffe7f2"/>
+      </g>
+      <g filter="url(#soft)">
+        <rect x="95" y="90" width="130" height="48" rx="14" fill="#e7d6ff"/>
+        <path d="M95 103 h130 v14 q-10 10 -20 0 t-20 0 t-20 0 t-20 0 t-20 0 t-20 0 v-14z" fill="#fff1fb"/>
+      </g>
+      <g>
+        <rect x="110" y="98" width="6" height="3" rx="2" fill="#ff9bc4"/>
+        <rect x="130" y="100" width="6" height="3" rx="2" fill="#ffd166"/>
+        <rect x="150" y="96" width="6" height="3" rx="2" fill="#7dd3fc"/>
+        <rect x="170" y="101" width="6" height="3" rx="2" fill="#86efac"/>
+        <rect x="190" y="97" width="6" height="3" rx="2" fill="#fca5a5"/>
+        <rect x="210" y="100" width="6" height="3" rx="2" fill="#c4b5fd"/>
+      </g>
+      <g id="candles">
+        <g class="c1">
+          <rect x="130" y="62" width="10" height="28" rx="3" fill="#ffffff"/>
+          <circle cx="135" cy="58" r="6" fill="#ffdbe9"/>
+          <g id="flame1"><ellipse cx="135" cy="50" rx="6" ry="9" fill="url(#flameGrad)"/></g>
+        </g>
+        <g class="c2">
+          <rect x="155" y="60" width="10" height="30" rx="3" fill="#ffffff"/>
+          <circle cx="160" cy="56" r="6" fill="#ffe9c7"/>
+          <g id="flame2"><ellipse cx="160" cy="47" rx="6" ry="9" fill="url(#flameGrad)"/></g>
+        </g>
+        <g class="c3">
+          <rect x="180" y="62" width="10" height="28" rx="3" fill="#ffffff"/>
+          <circle cx="185" cy="58" r="6" fill="#d9f0ff"/>
+          <g id="flame3"><ellipse cx="185" cy="50" rx="6" ry="9" fill="url(#flameGrad)"/></g>
+        </g>
+      </g>
+      <defs>
+        <filter id="soft" x="-20" y="-20" width="400" height="300">
+          <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="rgba(0,0,0,.25)"/>
+        </filter>
+        <radialGradient id="flameGrad" cx="50%" cy="40%" r="60%">
+          <stop offset="0%" stop-color="#fff"/><stop offset="45%" stop-color="#ffd47a"/>
+          <stop offset="75%" stop-color="orange"/><stop offset="100%" stop-color="#ff7b2d"/>
+        </radialGradient>
+      </defs>
+    </svg>
+  </div>
+</div>
+
+<div class="love-text">I ❤️ You</div>
+<div class="footer-message" id="notesBtn" aria-label="Ver mis notas">Ver mis notas 💌</div>
+
+<!-- Letter popup -->
+<div class="popup" id="popup" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
+  <p id="popupText"></p>
+  <button class="close-btn" id="popupClose">Cerrar</button>
+</div>
+
+<!-- Notes modal + heart burst -->
+<div class="notes-overlay" id="notesOverlay" aria-hidden="true">
+  <div class="notes-card" role="dialog" aria-modal="true" aria-label="Notas de cariño">
+    <h3 class="notes-title">Mis notitas para ti 🤍</h3>
+    <button class="notes-close" id="notesClose">Cerrar</button>
+    <div class="notes-grid" id="notesGrid"></div>
+  </div>
+</div>
+<div class="burst-heart" id="burstHeart"></div>
+
+<script>
+/* ---------------- Text marquee ---------------- */
+const messages = [
+  "🎉 Feliz cumpleaños, Dereck 🎉",
+  "Que hoy te abracen todas las cosas bonitas ✨",
+  "Eres mi lugar favorito del mundo 💕",
+  "Gracias por existir, amorcito ❤️",
+  "Que todos tus sueños se hagan realidad 🌟"
+];
+let currentMsg = 0;
+const movingText = document.getElementById('movingText');
+function showMessage(){ movingText.style.opacity=0; setTimeout(()=>{ movingText.textContent=messages[currentMsg]; movingText.style.opacity=1; currentMsg=(currentMsg+1)%messages.length; },350); }
+setInterval(showMessage,4000); showMessage();
+
+/* ---------------- Stars & shooting star ---------------- */
+for(let i=0;i<70;i++){const s=document.createElement('div');s.className='star';s.style.top=Math.random()*100+'%';s.style.left=Math.random()*100+'%';s.style.animationDuration=(1+Math.random()*3)+'s';s.style.opacity=0.7+Math.random()*0.3;document.body.appendChild(s);}
+setInterval(()=>{const ss=document.createElement('div');ss.className='shooting';ss.style.top=(10+Math.random()*40)+'vh';ss.style.left=(-20+Math.random()*20)+'vw';document.body.appendChild(ss);setTimeout(()=>ss.remove(),1700);}, 5200+Math.random()*3800);
+
+/* ---------------- Floating Love ---------------- */
+function createLoveText(){const t=document.createElement('div');t.className='love-float';t.textContent='Love You';t.style.left=(5+Math.random()*80)+'vw';t.style.animationDuration=(6+Math.random()*4)+'s';document.body.appendChild(t);setTimeout(()=>t.remove(),9000);}
+setInterval(createLoveText,1700);
+
+/* ---------------- Heart double-click palette ---------------- */
+const heart=document.getElementById('heart');
+heart.addEventListener('dblclick',()=>{const a=hslRnd(),b=hslRnd();const st=heart.querySelectorAll('stop');st[0]?.setAttribute('stop-color',a);st[1]?.setAttribute('stop-color',b);heart.style.transition='transform 260ms cubic-bezier(.2,.9,.2,1)';heart.style.transform='scale(1.4)';setTimeout(()=>heart.style.transform='',260);});
+function hslRnd(){const h=Math.floor(Math.random()*360),s=70+Math.floor(Math.random()*18),l=50+Math.floor(Math.random()*7);return `hsl(${h} ${s}% ${l}%)`;}
+
+/* ---------------- Rain hearts ---------------- */
+let rainInterval=setInterval(()=>{const h=document.createElement('div');h.className='heart-rain';h.textContent='❤';h.style.fontSize=(10+Math.random()*18)+'px';h.style.left=Math.random()*100+'vw';const dur=3800+Math.random()*3800;h.style.animationDuration=dur+'ms';h.style.opacity=0.6+Math.random()*0.6;h.style.transform=`translateY(-20vh) rotate(${Math.random()*360}deg)`;document.body.appendChild(h);setTimeout(()=>h.remove(),dur+150);},560);
+
+/* ---------------- Letter popup (Spanish) on cake tap ---------------- */
+const cake=document.getElementById('cake');
+const wishBadge=document.getElementById('wishBadge');
+const popup=document.getElementById('popup');
+const popupText=document.getElementById('popupText');
+const popupClose=document.getElementById('popupClose');
+let hasAnyInteraction=false;
+
+// REQUIRED Spanish letter text:
+const letterText = "Feliz cumpleaños, Dereck. Em deseo que este nuevo año de tu vida esté lleno de momentos felices, sueños alcanzados, y que, si alguna vez te sientes cansado, yo sea el lugar donde puedas apoyarte. ❤️"
+  .replace("Em","Deseo"); // safety fix in case paste adds typo
+
+function typePopup(text){
+  popupText.textContent='';
+  popup.classList.add('show');
+  let i=0; (function type(){ if(i<text.length){ popupText.textContent+=text.charAt(i); i++; const ch=text.charAt(i-1); const d=(',.—!?:'.includes(ch))?90:36; setTimeout(type,d);} })();
+}
+function fireworksAt(x,y,count=28){
+  for(let i=0;i<count;i++){
+    const fw=document.createElement('div'); fw.className='firework';
+    const ang=Math.random()*Math.PI*2, dist=60+Math.random()*90;
+    fw.style.left=x+'px'; fw.style.top=y+'px';
+    fw.style.setProperty('--dx', `${Math.cos(ang)*dist}px`);
+    fw.style.setProperty('--dy', `${Math.sin(ang)*dist}px`);
+    fw.style.background=`hsl(${Math.random()*360},90%,60%)`;
+    document.body.appendChild(fw); setTimeout(()=>fw.remove(),950);
+  }
+}
+function confettiBurst(pieces=90){
+  for(let i=0;i<pieces;i++){
+    const c=document.createElement('div'); c.className='confetti';
+    c.style.left=(Math.random()*100)+'vw'; c.style.top='-4vh';
+    c.style.background=`linear-gradient(180deg,hsl(${Math.random()*360},90%,70%),hsl(${Math.random()*360},90%,65%))`;
+    c.style.animationDuration=(2000+Math.random()*1600)+'ms';
+    c.style.transform=`translateY(-60px) rotate(${Math.random()*180}deg)`;
+    document.body.appendChild(c); setTimeout(()=>c.remove(),3600);
+  }
+}
+function puffSmokeNear(el){
+  const r=el.getBoundingClientRect();
+  const bx=r.left+r.width/2, by=r.top+r.height*0.25;
+  for(let i=0;i<12;i++){
+    const s=document.createElement('div'); s.className='smoke';
+    s.style.left=(bx+(Math.random()*40-20))+'px';
+    s.style.top=(by+(Math.random()*10-5))+'px';
+    s.style.setProperty('--sx',(Math.random()*30-15)+'px');
+    document.body.appendChild(s); setTimeout(()=>s.remove(),1700);
+  }
+}
+function extinguishFlames(){ ['flame1','flame2','flame3'].forEach(id=>document.getElementById(id)?.remove()); }
+
+cake.addEventListener('click',()=>{
+  hasAnyInteraction=true;
+  wishBadge.classList.add('show'); setTimeout(()=>wishBadge.classList.remove('show'),2600);
+  const r=cake.getBoundingClientRect(); fireworksAt(r.left+r.width/2, r.top+r.height/2, 28);
+  confettiBurst(80); puffSmokeNear(cake); extinguishFlames();
+  // heart 💌 micro-explode notes around cake
+  for(let i=0;i<16;i++){
+    const n=document.createElement('div'); n.className='note'; n.textContent='💌';
+    n.style.left=(r.left+r.width/2)+'px'; n.style.top=(r.top+r.height/2-20)+'px';
+    const ang=Math.random()*360, rad=70+Math.random()*70;
+    n.animate([{transform:'translate(-50%,-50%) scale(.6)',opacity:.95},{transform:`translate(${rad*Math.cos(ang*Math.PI/180)}px,${rad*Math.sin(ang*Math.PI/180)}px) scale(1)`,opacity:0}],{duration:1200,fill:'forwards',easing:'cubic-bezier(.2,.8,.2,1)'});
+    document.body.appendChild(n); setTimeout(()=>n.remove(),1400);
+  }
+  setTimeout(()=>typePopup(letterText),550);
+});
+popupClose.addEventListener('click',()=>popup.classList.remove('show'));
+
+/* ---------------- NOTES feature ---------------- */
+
+const notes = [
+  '🌙 Duerme lo suficiente',
+  '💧 Bebe mucha agua',
+  '🌸 Sonríe más',
+  '☀️ Sal a tomar aire fresco',
+  '💪 Ten confianza en ti',
+  '🍀 Todo estará bien',
+  '🌈 Hoy es un buen día, y tú también',
+  '🍫 Disfruta tu comida',
+  '🐌 Ve despacio, pero nunca te detengas',
+  '🎶 Escucha una canción que te guste',
+  '🪞 Eres lo mejor',
+  '🐾 Da un paseo afuera',
+  '💌 Siempre estoy aquí',
+  '🌻 Mantén tu corazón cálido',
+  // thêm mới từ đây 👇
+  '📖 Lee algo que te inspire',
+  '🌹 No olvides cuánto vales',
+  '🕊️ Respira profundo y suelta lo malo',
+  '⭐ Hoy puedes brillar más',
+  '🎨 Crea algo con tus manos',
+  '🤗 Abraza más',
+  '🚀 Cree en tus sueños',
+  '🌊 Todo fluye, todo pasa',
+  '🔥 Nunca pierdas tu pasión'
+];
+
+const notesBtn=document.getElementById('notesBtn');
+const notesOverlay=document.getElementById('notesOverlay');
+const notesGrid=document.getElementById('notesGrid');
+const notesClose=document.getElementById('notesClose');
+const burstHeart=document.getElementById('burstHeart');
+
+function showNotes(){
+  // burst heart + confetti soft
+  burstHeart.classList.add('burst-show');
+  confettiBurst(50);
+  setTimeout(()=>{ burstHeart.classList.remove('burst-show'); notesOverlay.classList.add('show'); notesOverlay.setAttribute('aria-hidden','false');}, 520);
+}
+function hideNotes(){ notesOverlay.classList.remove('show'); notesOverlay.setAttribute('aria-hidden','true'); }
+
+notesBtn.addEventListener('click', showNotes);
+notesClose.addEventListener('click', hideNotes);
+notesOverlay.addEventListener('click', (e)=>{ if(e.target===notesOverlay) hideNotes(); });
+
+// render notes once
+notesGrid.innerHTML = notes.map(t=>`<div class="note-item">${t}</div>`).join('');
+
+/* ---------------- Global activity cancels auto-popup (if any later) ---------------- */
+['click','mousemove','keydown','touchstart'].forEach(evt=>{
+  window.addEventListener(evt, ()=>{}, {once:true});
+});
+
+
+/* Cleanup */
+window.addEventListener('beforeunload', ()=> { if (rainInterval) clearInterval(rainInterval); });
+
+
+</script>
+</body>
+</html>
